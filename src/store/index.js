@@ -7,7 +7,6 @@ const headers = {
   apikey: 'FcKdtJs202204',
   username: 'KDT2_ByeonSeungHun'
 }
-const END_POINT_DELETE = (END_POINT+`/:${headers.username}`)
 
 export default createStore({
   // state는 계산된 데이터(computed)에서 가져올수 있다.
@@ -43,10 +42,18 @@ export default createStore({
       })
       // commit()메소드로 mutaion에 있는 setTodos라는 변이 메소드를 실행, 
       commit('setTodos', res.data)
+      console.log(res.data)
     },
-    async updateTodoList(context, title, done, order) {
+    // async updateTodoList(context, title, done, order) {
+    async updateTodoList(context, payload) {
+      const id = payload.id
+      const title =  payload.title
+      const done = payload.done
+      const order = payload.order
+
+      const END_POINT_UPDATE = `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${id}`
       await axios({
-        url: END_POINT,
+        url: END_POINT_UPDATE,
         method: 'PUT',
         headers,
         data: {
@@ -56,7 +63,9 @@ export default createStore({
         }
       })
     },
-    async deleteTodoList() {
+    async deleteTodoList(context, id) {
+      const deleteID = id
+      const END_POINT_DELETE = `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${deleteID}`
       await axios({
         url: END_POINT_DELETE,
         method: 'DELETE',

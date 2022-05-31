@@ -2,7 +2,12 @@
   <ul>
     <TodoItemVue 
       v-for="todo in todos"
+      :id="todo.id"
       :key="todo.id"
+      :done="todo.done"
+      :order="todo.order"
+      :created-at="todo.createdAt"
+      :updated-at="todo.updatedAt"
       :title="todo.title" />
   </ul>
 </template>

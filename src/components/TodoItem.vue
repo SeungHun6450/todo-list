@@ -1,8 +1,7 @@
 <template>
   <li>
-    <h3>{{ title }}</h3>
-    
     <template v-if="!editMode">
+      <h3>{{ title }}</h3>
       <button
         @click="onEditMode">
         수정
@@ -17,11 +16,11 @@
       <input
         ref="titleInput"
         :value="title" 
-        @keydown.enter="offEditMode(), updateTodoList()"
+        @keydown.enter="offEditMode()"
         @keydown.esc="offEditMode" />
       <button
         :value="id"
-        @click="offEditMode(), updateTodoList()">
+        @click="offEditMode()">
         완료
       </button>
       <button

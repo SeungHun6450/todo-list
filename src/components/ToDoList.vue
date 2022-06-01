@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <TodoItemVue 
+    <TodoItem 
       v-for="todo in todos"
       :id="todo.id"
       :key="todo.id"
@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import TodoItemVue from './TodoItem.vue'
+import TodoItem from './TodoItem.vue'
 
 export default {
   components: {
-    TodoItemVue
+    TodoItem
   },
   computed:{
     // store에 있는 state에 있는 todos를 가져온다.

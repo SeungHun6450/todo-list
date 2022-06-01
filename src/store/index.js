@@ -42,9 +42,8 @@ export default createStore({
       })
       // commit()메소드로 mutaion에 있는 setTodos라는 변이 메소드를 실행, 
       commit('setTodos', res.data)
-      console.log(res.data)
+      // console.log(res.data)
     },
-    // async updateTodoList(context, title, done, order) {
     async updateTodoList(context, payload) {
       const id = payload.id
       const title =  payload.title

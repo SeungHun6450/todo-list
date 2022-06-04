@@ -42,14 +42,12 @@ export default createStore({
       })
       // commit()메소드로 mutaion에 있는 setTodos라는 변이 메소드를 실행, 
       commit('setTodos', res.data)
-      // console.log(res.data)
     },
     async updateTodoList(context, payload) {
       const id = payload.id
       const title =  payload.title
       const done = payload.done
       const order = payload.order
-
       const END_POINT_UPDATE = `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${id}`
       await axios({
         url: END_POINT_UPDATE,

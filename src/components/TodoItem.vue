@@ -1,13 +1,17 @@
 <template>
   <li>
     <template v-if="!editMode">
+      <input
+        class="chk"
+        type="checkbox"
+        :checked="done"
+        @click="changeDoneTodoList" />
       <h3>{{ title }}</h3>
       <button
         @click="onEditMode">
         수정
       </button>
       <button
-        :value="id"
         @click="deleteTodoList">
         삭제
       </button>
@@ -16,11 +20,10 @@
       <input
         ref="titleInput"
         :value="title" 
-        @keydown.enter="offEditMode()"
+        @keydown.enter="updateTodoList(), offEditMode()"
         @keydown.esc="offEditMode" />
       <button
-        :value="id"
-        @click="offEditMode()">
+        @click="updateTodoList(), offEditMode()">
         완료
       </button>
       <button
@@ -69,16 +72,29 @@ export default {
   methods: {
     async updateTodoList() {
       const payload = { id: this.id, title: this.$refs.titleInput.value, done: this.done, order: this.order}
-      this.$store.dispatch('updateTodoList', payload)
+      await this.$store.dispatch('updateTodoList', payload)
+      this.$store.dispatch('readTodoList')
     },
     async deleteTodoList() {
-      this.$store.dispatch('deleteTodoList', this.id)
+      await this.$store.dispatch('deleteTodoList', this.id)
+      this.$store.dispatch('readTodoList')
     },
-    onEditMode() {
+    async changeDoneTodoList(event) {
+      let doneValue = false
+      if (event.target.checked) {
+        doneValue = true
+      } 
+      const payload = { id: this.id, title: this.title, done: this.done, order: this.order}
+      payload.done = doneValue
+      await this.$store.dispatch('updateTodoList', payload)
+      this.$store.dispatch('readTodoList')
+    },
+    async onEditMode() {
       this.editMode = true
-      console.log(this.$refs.titleInput)
+      console.log(window)
       // window.addEventListener('click', this.offEditMode)
-      // this.$refs.titleInput.focus()
+      await this.$nextTick()
+      this.$refs.titleInput.focus()
     },
     offEditMode() {
       this.editMode = false
@@ -91,6 +107,7 @@ export default {
 <style lang="scss" scoped>
 h3 {
   margin: 0 10px 20px 0;
+  text-decoration: none;
 }
 h5{
   margin: 5px 10px 20px 10px;
@@ -102,5 +119,10 @@ button {
   width: 50px;
   height: 27px;
 }
-
+.chk {
+  margin-top: 8px;
+}
+:checked + h3 {
+  text-decoration:line-through;
+}
 </style>

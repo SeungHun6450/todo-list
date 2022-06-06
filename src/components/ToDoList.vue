@@ -1,9 +1,22 @@
 <template>
+  <select
+    name="done"
+    @change="selectReadTodoList">
+    <option value="">
+      선택
+    </option>
+    <option value="true">
+      완료
+    </option>
+    <option value="false">
+      미완료
+    </option>
+  </select>
   <ul>
     <TodoItem 
       v-for="todo in todos"
       :id="todo.id"
-      :key="todo.id"
+      :key="todo.order"
       :done="todo.done"
       :order="todo.order"
       :created-at="todo.createdAt"
@@ -29,9 +42,14 @@ export default {
     this.readTodoList()
   },
   methods: {
-    async readTodoList() {
+    async readTodoList(done) {
       // store에 있는 action메소드 실행
-      this.$store.dispatch('readTodoList')
+      this.$store.dispatch('readTodoList', done)
+    },
+    selectReadTodoList(event) {
+      console.log(event.target.value)
+      const done = event.target.value
+      this.readTodoList(done)
     }
   }
 }

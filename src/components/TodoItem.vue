@@ -32,7 +32,9 @@
       </button>
     </template>
     <h5>생성일: {{ new Date(createdAt).toLocaleString() }}</h5>
-    <h5>수정일: {{ new Date(updatedAt).toLocaleString() }}</h5>
+    <template v-if="(new Date(createdAt).toLocaleString()) !== (new Date(updatedAt).toLocaleString())">
+      <h5>수정일: {{ new Date(updatedAt).toLocaleString() }}</h5>
+    </template>
   </li>
 </template>
 

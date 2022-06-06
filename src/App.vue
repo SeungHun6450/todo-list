@@ -18,5 +18,13 @@ export default {
 </script>
 
 <style>
-
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('./img/background.png');
+    background-repeat: no-repeat;
+    /* background-position: center; */
+    background-size: auto;
+  }
 </style>

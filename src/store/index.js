@@ -7,7 +7,7 @@ const headers = {
   apikey: 'FcKdtJs202204',
   username: 'KDT2_ByeonSeungHun'
 }
-
+let order = 0
 export default createStore({
   // state는 계산된 데이터(computed)에서 가져올수 있다.
   state() {
@@ -29,19 +29,37 @@ export default createStore({
         method: 'POST',
         headers,
         data: {
-          title
+          title,
+          order
         }
       })
+      order += 1
     },
     // context 매개변수 중(state, getters, commit, dispatch) 객체 구조분해할당으로 commit만 꺼내서 사용
-    async readTodoList({ commit }) {
+    async readTodoList({ commit }, done) {
       const res = await axios({
         url: END_POINT,
         method: 'GET',
         headers
       })
+      console.log(done)
       // commit()메소드로 mutaion에 있는 setTodos라는 변이 메소드를 실행, 
-      commit('setTodos', res.data)
+      if(Boolean(done) == true){
+        console.log('최종 true')
+        for(let i = 0 ; i<res.data.length ; i += 1) {
+          res.data[i].done
+        }
+        commit('setTodos', res.data)
+      }
+      else if (Boolean(done) == false) {
+        console.log('최종 false')
+        commit('setTodos', res.data)
+      }
+      else {
+        console.log('최종 x')
+        commit('setTodos', res.data)
+      }
+      console.log(res.data)
     },
     async updateTodoList(context, payload) {
       const id = payload.id

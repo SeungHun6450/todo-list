@@ -3,7 +3,7 @@
     name="done"
     @change="selectReadTodoList">
     <option value="">
-      선택
+      전체
     </option>
     <option value="true">
       완료
@@ -47,7 +47,6 @@ export default {
       this.$store.dispatch('readTodoList', done)
     },
     selectReadTodoList(event) {
-      console.log(event.target.value)
       const done = event.target.value
       this.readTodoList(done)
     }

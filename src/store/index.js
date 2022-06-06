@@ -42,24 +42,26 @@ export default createStore({
         method: 'GET',
         headers
       })
-      console.log(done)
       // commit()메소드로 mutaion에 있는 setTodos라는 변이 메소드를 실행, 
-      if(Boolean(done) == true){
-        console.log('최종 true')
-        for(let i = 0 ; i<res.data.length ; i += 1) {
-          res.data[i].done
+      if(done === 'true'){
+        for(let i = 0 ; i < res.data.length ; i += 1) {
+          if(res.data[i].done !== true){
+            res.data.splice(i, 1)
+          }
         }
         commit('setTodos', res.data)
       }
-      else if (Boolean(done) == false) {
-        console.log('최종 false')
+      else if (done === 'false') {
+        for(let i = 0 ; i<res.data.length ; i += 1) {
+          if(res.data[i].done !== false) {
+            res.data.splice(i, 1)
+          }
         commit('setTodos', res.data)
+        }
       }
       else {
-        console.log('최종 x')
         commit('setTodos', res.data)
       }
-      console.log(res.data)
     },
     async updateTodoList(context, payload) {
       const id = payload.id

@@ -1,17 +1,4 @@
 <template>
-  <select
-    name="done"
-    @change="selectReadTodoList">
-    <option value="">
-      전체
-    </option>
-    <option value="true">
-      완료
-    </option>
-    <option value="false">
-      미완료
-    </option>
-  </select>
   <ul>
     <TodoItem 
       v-for="todo in todos"
@@ -45,10 +32,6 @@ export default {
     async readTodoList(done) {
       // store에 있는 action메소드 실행
       this.$store.dispatch('readTodoList', done)
-    },
-    selectReadTodoList(event) {
-      const done = event.target.value
-      this.readTodoList(done)
     }
   }
 }

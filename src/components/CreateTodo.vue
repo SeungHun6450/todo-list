@@ -22,7 +22,7 @@ export default {
       await this.$store.dispatch('createTodoList', this.title)
       this.title = ''
       this.$store.dispatch('readTodoList')
+      }
     }
-  }
 }
 </script>

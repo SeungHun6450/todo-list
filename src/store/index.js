@@ -88,6 +88,25 @@ export default createStore({
         method: 'DELETE',
         headers
       })
+    },
+    async deleteFinishTodoList() {
+      const res = await axios({
+        url: END_POINT,
+        method: 'GET',
+        headers
+      })
+      
+      for(let i = 0 ; i < res.data.length ; i += 1) {
+        if(res.data[i].done === true){
+          let deleteID = res.data[i].id
+          let END_POINT_DELETE = `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${deleteID}`
+          await axios({
+            url: END_POINT_DELETE,
+            method: 'DELETE',
+            headers
+          })
+        }
+      }
     }
   }
 })

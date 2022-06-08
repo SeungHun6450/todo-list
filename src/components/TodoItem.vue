@@ -7,34 +7,41 @@
         :checked="done"
         @click="changeDoneTodoList" />
       <h3>{{ title }}</h3>
+      <div class="update">
+        수정일: {{ new Date(updatedAt).toLocaleString() }}
+      </div>
       <button
+        class="edit_button"
         @click="onEditMode">
-        수정
+        &#128221;
       </button>
       <button
+        class="delete_button"
         @click="deleteTodoList">
-        삭제
+        &#10060;
       </button>
     </template>
     <template v-else>
       <input
         ref="titleInput"
+        class="edit_title"
         :value="title" 
         @keydown.enter="updateTodoList(), offEditMode()"
         @keydown.esc="offEditMode" />
       <button
+        class="edit_ok_button"
         @click="updateTodoList(), offEditMode()">
-        완료
+        &#9989;
       </button>
       <button
+        class="cancel_button"
         @click="offEditMode">
-        취소
+        &#10062;
       </button>
     </template>
-    <h5>생성일: {{ new Date(createdAt).toLocaleString() }}</h5>
-    <template v-if="(new Date(createdAt).toLocaleString()) !== (new Date(updatedAt).toLocaleString())">
-      <h5>수정일: {{ new Date(updatedAt).toLocaleString() }}</h5>
-    </template>
+    <div class="create">
+      생성일: {{ new Date(createdAt).toLocaleString() }}
+    </div>
   </li>
 </template>
 
@@ -93,38 +100,79 @@ export default {
     },
     async onEditMode() {
       this.editMode = true
-      console.log(window)
-      // window.addEventListener('click', this.offEditMode)
       await this.$nextTick()
       this.$refs.titleInput.focus()
     },
     offEditMode() {
       this.editMode = false
-      // window.removeEventListener('click', this.offEditMode)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-h3 {
-  margin: 0 10px 20px 0;
-  text-decoration: none;
-}
-h5{
-  margin: 5px 10px 20px 10px;
-}
 li {
   display: flex;
-}
-button {
-  width: 50px;
-  height: 27px;
-}
-.chk {
-  margin-top: 8px;
-}
-:checked + h3 {
-  text-decoration:line-through;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  width: 509px;
+  content: '';
+  border:#dbd9d9 solid 0.1px;
+  background-color: #dbd9d9;
+  border-radius: 5px;
+      &:hover {
+    .update {
+      display: block;
+    }
+  }
+  h3 {
+    top: 0;
+    left: 0;
+    margin: auto;
+    padding-left: 5px;
+    text-decoration: none;
+    overflow: hidden;
+    width: auto;
+  }
+  .create{
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 7px;
+    width: 85px;
+  }
+  .update{
+    font-size: 14px;
+    font-weight: bold;
+    width: 100px;
+    display: none;
+  }
+  .edit_button, .delete_button, .edit_ok_button, .cancel_button {
+    background-color: transparent;
+    border: none;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+  }
+  .edit_ok_button, .cancel_button {}
+  .edit_title {
+    width: 330px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .chk {
+    width: 22px;
+    height: 22px;
+    top: 0;
+    left: 0;
+    margin: auto;
+    margin-left: 5px;
+  }
+  :checked {
+
+    & + h3 {
+      text-decoration:line-through;
+    }
+  }
 }
 </style>

@@ -28,6 +28,9 @@ export default {
   created() {
     this.readTodoList()
   },
+  // mounted() {
+  //   this.initSortable()
+  // },
   methods: {
     async readTodoList(done) {
       // store에 있는 action메소드 실행
@@ -36,3 +39,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  ul {
+    padding: 0px;
+    width: 539px;
+    height: 620px;
+    overflow-y: visible;
+    overflow-x: hidden;
+  }
+</style>

@@ -1,23 +1,28 @@
 <template>
+  <HeaderVue />
   <CreateTodo />
-  <DivideTodoList />
-  <DeleteFinishTodoList />
+  <div class="divide_delete">
+    <DivideTodoList />
+    <DeleteAllTodoList />
+  </div>
   <ToDoList />
 </template>
 
 <script>
+import HeaderVue from '~/components/HeaderVue.vue'
 import CreateTodo from '~/components/CreateTodo.vue'
 import DivideTodoList from '~/components/DivideTodoList.vue'
-import DeleteFinishTodoList from '~/components/DeleteFinishTodoList.vue'
+import DeleteAllTodoList from '~/components/DeleteAllTodoList.vue'
 import ToDoList from '~/components/ToDoList.vue'
 
 export default {
   // 지역적으로 사용할 컴포넌트를 등록
   components: {
     // 속성과 데이터의 이름이 같으면 하나로 합칠 수 있다.
+    HeaderVue,
     ToDoList,
     DivideTodoList,
-    DeleteFinishTodoList,
+    DeleteAllTodoList,
     CreateTodo
   }
 }
@@ -28,9 +33,10 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('./img/background_width.png');
+    background-image: url('./img/background_height.png');
     background-repeat: no-repeat;
-    /* background-position: center; */
+    background-position: center;
+    height: 827px;
     background-size: auto;
   }
 </style>

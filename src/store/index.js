@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
+// import Sortable from 'sortablejs'
 
 const END_POINT = 'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos'
 const headers = {
@@ -7,7 +8,6 @@ const headers = {
   apikey: 'FcKdtJs202204',
   username: 'KDT2_ByeonSeungHun'
 }
-let order = 0
 export default createStore({
   // state는 계산된 데이터(computed)에서 가져올수 있다.
   state() {
@@ -24,6 +24,12 @@ export default createStore({
   },
   actions: {
     async createTodoList(context, title) {
+      const res = await axios({
+        url: END_POINT,
+        method: 'GET',
+        headers
+      })
+      let order = res.data.length
       await axios({
         url: END_POINT,
         method: 'POST',
@@ -33,7 +39,6 @@ export default createStore({
           order
         }
       })
-      order += 1
     },
     // context 매개변수 중(state, getters, commit, dispatch) 객체 구조분해할당으로 commit만 꺼내서 사용
     async readTodoList({ commit }, done) {
@@ -43,25 +48,25 @@ export default createStore({
         headers
       })
       // commit()메소드로 mutaion에 있는 setTodos라는 변이 메소드를 실행, 
-      if(done === 'true'){
-        for(let i = 0 ; i < res.data.length ; i += 1) {
+      for(let i = 0 ; i < res.data.length ; i += 1) {
+        console.log(i)
+        if(done === 'true'){
           if(res.data[i].done !== true){
+            console.log(res.data[i].done)
             res.data.splice(i, 1)
           }
         }
-        commit('setTodos', res.data)
-      }
-      else if (done === 'false') {
-        for(let i = 0 ; i<res.data.length ; i += 1) {
+        else if (done == 'false') {
           if(res.data[i].done !== false) {
             res.data.splice(i, 1)
           }
-        commit('setTodos', res.data)
+        }
+        else {
+          break
         }
       }
-      else {
-        commit('setTodos', res.data)
-      }
+      commit('setTodos', res.data)
+      console.log(res.data)
     },
     async updateTodoList(context, payload) {
       const id = payload.id
@@ -107,6 +112,36 @@ export default createStore({
           })
         }
       }
-    }
+    },
+    async deleteAllTodoList() {
+      const res = await axios({
+        url: END_POINT,
+        method: 'GET',
+        headers
+      })
+      
+      for(let i = 0 ; i < res.data.length ; i += 1) {
+        let deleteID = res.data[i].id
+        let END_POINT_DELETE = `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${deleteID}`
+        await axios({
+          url: END_POINT_DELETE,
+          method: 'DELETE',
+          headers
+        })
+      }
+    },
+    // initSortable() {
+    //   new Sortable(this.$refs.todoList, {
+    //     handle: 'li .handle', // 드래그 핸들이 될 요소의 선택자를 입력합니다.
+    //     delay: 50, // 클릭이 밀리는 것을 방지하기 위해 약간의 지연 시간을 추가합니다.
+    //     animation: 0, // 정렬할 때 애니메이션 속도(ms)를 지정합니다.
+    //     forceFallback: true, // 다양한 환경의 일관된 Drag&Drop(DnD)을 위해 HTML5 기본 DnD 동작을 무시하고 내장 기능을 사용합니다.
+    //     // 요소의 DnD가 종료되면 실행할 핸들러(함수)를 지정합니다.
+    //     onEnd: event => {
+    //       console.log(event)
+    //       this.reorderTodos(event.oldIndex, event.newIndex)
+    //     }
+    //   })
+    // }
   }
 })

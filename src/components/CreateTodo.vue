@@ -1,11 +1,14 @@
 <template>
-  <input
-    :value="title"
-    @input="title = $event.target.value"
-    @keydown.enter="createTodoList()" />
-  <button @click="createTodoList()">
-    추가
-  </button>
+  <div>
+    <input
+      :value="title"
+      placeholder="To Do List를 입력하세요!"
+      @input="title = $event.target.value" 
+      @keydown.enter="createTodoList()" />
+    <button @click="createTodoList()">
+      &#9997;
+    </button>
+  </div>
 </template>
 
 <script>
@@ -26,3 +29,26 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+  div {
+    position: relative;
+    margin: 5% 0 15px 20%;
+    input {
+      padding: 0 10px;
+      height: 30px;
+      width: 300px;
+      font-size: 22px;
+      border-radius: 10px;
+    }
+    button {
+      left: 65%;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: transparent;
+      border-style: none;
+      position: absolute;
+    }
+  }
+</style>

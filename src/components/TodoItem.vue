@@ -6,20 +6,28 @@
         type="checkbox"
         :checked="done"
         @click="changeDoneTodoList" />
-      <h3>{{ title }}</h3>
-      <div class="update">
-        수정일: {{ new Date(updatedAt).toLocaleString() }}
+      <div class="title_and_buttons">
+        <div class="title">
+          {{ title }}
+          <template v-if="new Date(createdAt).toLocaleString() !== new Date(updatedAt).toLocaleString()">
+            <div class="update">
+              수정일: {{ new Date(updatedAt).toLocaleString() }}
+            </div>
+          </template>
+        </div>
+        <div class="buttons">
+          <button
+            class="edit_button"
+            @click="onEditMode">
+            &#128221;
+          </button>
+          <button
+            class="delete_button"
+            @click="deleteTodoList">
+            &#10060;
+          </button>
+        </div>
       </div>
-      <button
-        class="edit_button"
-        @click="onEditMode">
-        &#128221;
-      </button>
-      <button
-        class="delete_button"
-        @click="deleteTodoList">
-        &#10060;
-      </button>
     </template>
     <template v-else>
       <input
@@ -120,59 +128,84 @@ li {
   border:#dbd9d9 solid 0.1px;
   background-color: #dbd9d9;
   border-radius: 5px;
-      &:hover {
-    .update {
-      display: block;
+  .chk {
+    width: 22px;
+    height: 22px;
+    top: 0;
+    margin: auto;
+    &:checked {
+      & + .title_and_buttons .title {
+        text-decoration: line-through;
+        .update  {
+          display: none;
+        }
+      }
+      & + .title_and_buttons .buttons .edit_button {
+        display: none;
+      }
     }
   }
-  h3 {
+  .title_and_buttons {
     top: 0;
-    left: 0;
     margin: auto;
-    padding-left: 5px;
-    text-decoration: none;
-    overflow: hidden;
-    width: auto;
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-weight: bold;
+      margin-left: -20px;
+      .update {
+        margin-left: 5px;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        display: none;
+      }
+      &:hover {
+        .update {
+          display: block;
+        }
+      }      
+    }
+    .buttons {
+      display: flex;
+      margin-right: -30px;
+      .edit_button, .delete_button {
+        background-color: transparent;
+        border: none;
+        top: 0;
+        right: 0;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    }
   }
-  .create{
-    font-size: 14px;
-    font-weight: bold;
-    margin-right: 7px;
-    width: 85px;
-  }
-  .update{
-    font-size: 14px;
-    font-weight: bold;
-    width: 100px;
-    display: none;
-  }
-  .edit_button, .delete_button, .edit_ok_button, .cancel_button {
+  .edit_ok_button, .cancel_button {
     background-color: transparent;
     border: none;
     top: 0;
     left: 0;
     font-size: 20px;
+    cursor: pointer;
   }
-  .edit_ok_button, .cancel_button {}
   .edit_title {
     width: 330px;
     font-size: 20px;
     font-weight: bold;
     text-align: center;
   }
-  .chk {
-    width: 22px;
-    height: 22px;
+  .create{
     top: 0;
-    left: 0;
+    right: 0;
     margin: auto;
-    margin-left: 5px;
-  }
-  :checked {
-
-    & + h3 {
-      text-decoration:line-through;
-    }
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 7px;
+    width: 85px;
   }
 }
 </style>

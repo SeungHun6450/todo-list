@@ -2,7 +2,7 @@
   <div>
     <input
       :value="title"
-      placeholder="To Do List를 입력하세요!"
+      placeholder="To Do List 를 입력하세요!"
       @input="title = $event.target.value" 
       @keydown.enter="createTodoList()" />
     <button @click="createTodoList()">

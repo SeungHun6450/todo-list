@@ -20,7 +20,6 @@ export default {
     selectReadTodoList(event) {
       const done = event.target.value
       this.$store.dispatch('readTodoList', done)
-      this.$store.dispatch('deleteFinishButton', done)
     }
   }
 }

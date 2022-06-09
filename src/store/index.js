@@ -47,26 +47,27 @@ export default createStore({
         method: 'GET',
         headers
       })
-      // commit()메소드로 mutaion에 있는 setTodos라는 변이 메소드를 실행, 
-      for(let i = 0 ; i < res.data.length ; i += 1) {
-        console.log(i)
-        if(done === 'true'){
-          if(res.data[i].done !== true){
-            console.log(res.data[i].done)
-            res.data.splice(i, 1)
+
+      // done에 따른 새로운 객체 데이터를 생성하여 목록에 출력하기
+      if(done === 'true' || done === 'false') {
+
+        let divideData = []
+        let count = 0
+
+        for(let i = 0 ; i < res.data.length ; i += 1) {
+          if(String(res.data[i].done) === done){
+            divideData[count] = res.data[i]
+            count += 1
           }
         }
-        else if (done == 'false') {
-          if(res.data[i].done !== false) {
-            res.data.splice(i, 1)
-          }
-        }
-        else {
-          break
-        }
+
+        commit('setTodos', divideData)
       }
-      commit('setTodos', res.data)
-      console.log(res.data)
+      else {
+        // 전체 목록
+        // commit()메소드로 mutaion에 있는 setTodos라는 변이 메소드를 실행, 
+        commit('setTodos', res.data)
+      }
     },
     async updateTodoList(context, payload) {
       const id = payload.id

@@ -1,6 +1,5 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
-// import Sortable from 'sortablejs'
 
 const END_POINT = 'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos'
 const headers = {
@@ -12,7 +11,9 @@ export default createStore({
   // state는 계산된 데이터(computed)에서 가져올수 있다.
   state() {
     return {
-      todos: []
+      todos: [],
+      order: '',
+      loading: false
     }
   },
   // todos에 대한 수정 권한
@@ -20,28 +21,48 @@ export default createStore({
   mutations: {
     setTodos(state, payload) {
       state.todos = payload
+    },
+    reorderTodos(state, {oldIndex, newIndex}) {
+      const clone = { ...state.todos[oldIndex] }
+      state.todos.splice(oldIndex, 1)
+      state.todos.splice(newIndex, 0, clone)
+    },
+    loadingStatus(state, status = true) {
+      state.loading = status
     }
   },
   actions: {
-    async createTodoList(context, title) {
+    async createTodoList({commit}, title) {
+      commit('loadingStatus')
       const res = await axios({
         url: END_POINT,
         method: 'GET',
         headers
       })
-      let order = res.data.length
+
+      let order = 0
+      let max_order = 0
+      for(let i = 0 ; i < res.data.length ; i += 1) {
+        order = res.data[i].order + 1
+        if(order > max_order) {
+          max_order = order
+        }
+      }
+    
       await axios({
         url: END_POINT,
         method: 'POST',
         headers,
         data: {
           title,
-          order
+          order: max_order
         }
       })
+      commit('loadingStatus', false)
     },
     // context 매개변수 중(state, getters, commit, dispatch) 객체 구조분해할당으로 commit만 꺼내서 사용
     async readTodoList({ commit }, done) {
+      commit('loadingStatus')
       const res = await axios({
         url: END_POINT,
         method: 'GET',
@@ -68,13 +89,14 @@ export default createStore({
         // commit()메소드로 mutaion에 있는 setTodos라는 변이 메소드를 실행, 
         commit('setTodos', res.data)
       }
+      commit('loadingStatus', false)
     },
     async updateTodoList(context, payload) {
       const id = payload.id
       const title =  payload.title
       const done = payload.done
       const order = payload.order
-      const END_POINT_UPDATE = `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${id}`
+      const END_POINT_UPDATE = END_POINT + '/' + id
       await axios({
         url: END_POINT_UPDATE,
         method: 'PUT',
@@ -86,16 +108,19 @@ export default createStore({
         }
       })
     },
-    async deleteTodoList(context, id) {
+    async deleteTodoList({commit}, id) {
+      commit('loadingStatus')
       const deleteID = id
-      const END_POINT_DELETE = `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${deleteID}`
+      const END_POINT_DELETE = END_POINT + '/' + deleteID
       await axios({
         url: END_POINT_DELETE,
         method: 'DELETE',
         headers
       })
+      commit('loadingStatus', false)
     },
-    async deleteFinishTodoList() {
+    async deleteFinishTodoList({commit}) {
+      commit('loadingStatus')
       const res = await axios({
         url: END_POINT,
         method: 'GET',
@@ -105,7 +130,7 @@ export default createStore({
       for(let i = 0 ; i < res.data.length ; i += 1) {
         if(res.data[i].done === true){
           let deleteID = res.data[i].id
-          let END_POINT_DELETE = `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${deleteID}`
+          let END_POINT_DELETE = END_POINT + '/' + deleteID
           await axios({
             url: END_POINT_DELETE,
             method: 'DELETE',
@@ -113,8 +138,10 @@ export default createStore({
           })
         }
       }
+      commit('loadingStatus', false)
     },
-    async deleteAllTodoList() {
+    async deleteAllTodoList({commit}) {
+      commit('loadingStatus')
       const res = await axios({
         url: END_POINT,
         method: 'GET',
@@ -123,26 +150,29 @@ export default createStore({
       
       for(let i = 0 ; i < res.data.length ; i += 1) {
         let deleteID = res.data[i].id
-        let END_POINT_DELETE = `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${deleteID}`
+        let END_POINT_DELETE = END_POINT + '/' + deleteID
         await axios({
           url: END_POINT_DELETE,
           method: 'DELETE',
           headers
         })
       }
+      commit('loadingStatus', false)
     },
-    // initSortable() {
-    //   new Sortable(this.$refs.todoList, {
-    //     handle: 'li .handle', // 드래그 핸들이 될 요소의 선택자를 입력합니다.
-    //     delay: 50, // 클릭이 밀리는 것을 방지하기 위해 약간의 지연 시간을 추가합니다.
-    //     animation: 0, // 정렬할 때 애니메이션 속도(ms)를 지정합니다.
-    //     forceFallback: true, // 다양한 환경의 일관된 Drag&Drop(DnD)을 위해 HTML5 기본 DnD 동작을 무시하고 내장 기능을 사용합니다.
-    //     // 요소의 DnD가 종료되면 실행할 핸들러(함수)를 지정합니다.
-    //     onEnd: event => {
-    //       console.log(event)
-    //       this.reorderTodos(event.oldIndex, event.newIndex)
-    //     }
-    //   })
-    // }
+    async reorderTodo({commit, state}, event) {
+      if (event !== undefined) {
+        commit('reorderTodos', event)
+      }
+      const todoIds = state.todos.map(todo => todo.id)
+      let END_POINT_REORDER = END_POINT + '/reorder'
+      await axios({
+        url: END_POINT_REORDER,
+        method: 'PUT',
+        headers,
+        data: {
+          todoIds
+        }
+      })
+    }
   }
 })

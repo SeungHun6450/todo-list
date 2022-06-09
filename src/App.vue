@@ -5,6 +5,7 @@
     <DivideTodoList />
     <DeleteAllTodoList />
   </div>
+  <LoadingImage />
   <ToDoList />
 </template>
 
@@ -13,6 +14,7 @@ import HeaderVue from '~/components/HeaderVue.vue'
 import CreateTodo from '~/components/CreateTodo.vue'
 import DivideTodoList from '~/components/DivideTodoList.vue'
 import DeleteAllTodoList from '~/components/DeleteAllTodoList.vue'
+import LoadingImage from '~/components/LoadingImage.vue'
 import ToDoList from '~/components/ToDoList.vue'
 
 export default {
@@ -23,6 +25,7 @@ export default {
     ToDoList,
     DivideTodoList,
     DeleteAllTodoList,
+    LoadingImage,
     CreateTodo
   }
 }

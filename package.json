@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "sortablejs": "^1.15.0",
+    "sortablejs-vue3": "^1.0.1",
     "vue": "^3.2.25",
     "vuex": "^4.0.2"
   },

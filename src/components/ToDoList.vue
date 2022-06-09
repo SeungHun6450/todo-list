@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul ref="todoList">
     <TodoItem 
       v-for="todo in todos"
       :id="todo.id"
@@ -14,6 +14,7 @@
 
 <script>
 import TodoItem from './TodoItem.vue'
+import Sortable from 'sortablejs'
 
 export default {
   components: {
@@ -28,13 +29,28 @@ export default {
   created() {
     this.readTodoList()
   },
-  // mounted() {
-  //   this.initSortable()
-  // },
+  mounted() {
+    this.initSortable()
+  },
   methods: {
     async readTodoList(done) {
       // store에 있는 action메소드 실행
       this.$store.dispatch('readTodoList', done)
+    },
+    reorderTodo(oldIndex, newIndex) {
+      let event = {oldIndex, newIndex}
+      this.$store.dispatch('reorderTodo', event)
+    },
+    initSortable() {
+      new Sortable(this.$refs.todoList, {
+        handle: '.handle',
+        delay: 50,
+        animation: 0,
+        forceFallback: true, 
+        onEnd: event => {
+          this.reorderTodo(event.oldIndex, event.newIndex)
+        }
+      })
     }
   }
 }

@@ -1,6 +1,8 @@
 <template>
   <li>
     <template v-if="!editMode">
+      <div class="handle">
+      </div>
       <input
         class="chk"
         type="checkbox"
@@ -128,6 +130,13 @@ li {
   border:#dbd9d9 solid 0.1px;
   background-color: #dbd9d9;
   border-radius: 5px;
+  .handle {
+    background-image: url('../img/baseline_menu_black_24dp.png');
+    margin: auto -10px auto 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
   .chk {
     width: 22px;
     height: 22px;
